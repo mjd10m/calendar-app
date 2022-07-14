@@ -8,9 +8,10 @@ function checkTime() {
 $(".time-container .activity-container").each(function(index, el) {
     auditTask(el);
   });
+  console.log(`Time Checked: ${moment().format("h:mm:ss a")}`);
 }
 
-setInterval(checkTime(), 10000);
+setInterval(checkTime, 60000);
 
 $("#currentDay").text(currentDate)
 
@@ -29,15 +30,12 @@ $(".activity-container").on("click", ".activity", function() {
     $(".saveBtn").css("pointer-events", "auto")
 
 });
-//$(".activity-container").on("blur","textarea",function(){
-
-//})
 
 $(".time-container").on("click", ".activity-container", function() {
     console.log("clicked");
-    var textInput = $("<textarea>").addClass("form-control col-7");
-    $(this).append(textInput);
-    textInput.trigger("focus");
+    textBoxInput = $("<textarea>").addClass("form-control col-7");
+    $(this).append(textBoxInput);
+    textBoxInput.trigger("focus");
     $(".activity-container").css("pointer-events", "none")
     $(".saveBtn").css("pointer-events", "auto")
 });
@@ -54,6 +52,19 @@ $(".time-container").on("click",".saveBtn", function() {
     textBoxInput = ''
     
 });
+
+$(".activity-container").on("blur","textarea",function(){
+    if(elementEdit = '') {
+        textBoxInput.remove();
+        $(".activity-container").css("pointer-events", "auto")
+        $(".saveBtn").css("pointer-events", "none")
+    } else {
+        textBoxInput.replaceWith(elementEdit);
+        $(".activity-container").css("pointer-events", "auto")
+        $(".saveBtn").css("pointer-events", "none")
+    }
+    
+})
 
 function createTask(taskText, taskContainer, elementEdit, textBoxInput) {
     var taskDiv = $("<div>").addClass("activity").attr("id", taskNumber);
@@ -72,21 +83,21 @@ function createTask(taskText, taskContainer, elementEdit, textBoxInput) {
 }
 
 function auditTask(task) {
-    var timeOffset = $(task).attr("id")
-    var time = moment().format("H")
+    var timeOffset = parseInt($(task).attr("id"))
+    var time = parseInt(moment().format("H"))
     $(task).removeClass("past present future");
-    if (time > timeOffset + 8) {
+    if (time > timeOffset + 0) {
         $(task).addClass("past");
-      } else if (time === timeOffset + 8) {
+      } else if (time == timeOffset + 0) {
         $(task).addClass("present");
       } else {
         $(task).addClass("future");
       }
-    console.log(time);
 }
 
 function load() {
     $(".saveBtn").css("pointer-events", "none")
+    checkTime();
 }
 load()
 
