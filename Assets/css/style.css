@@ -70,3 +70,10 @@ textarea{
   font-size: 20px;
   transition: all .3s ease-in-out;
 }
+.enableClick {
+  pointer-events: auto;
+}
+
+.disableClick {
+  pointer-events: none;
+}
