@@ -2,7 +2,6 @@ var taskStorage = []
 var elementEdit = '';
 var textBoxInput = '';
 var currentDate = moment().format('ddd MMMM Do');
-var clickedE1ClassAC = $(".activity-container").attr("class")
 
 function checkTime() {
 $(".time-container .activity-container").each(function(index, el) {
@@ -14,31 +13,6 @@ $(".time-container .activity-container").each(function(index, el) {
 setInterval(checkTime, 60000);
 
 $("#currentDay").text(currentDate)
-
-/*$(".activity-container").on("click", ".activity", function() {
-    console.log("clicked")
-    elementEdit = $(this);
-    var text = $(this)
-   .text()
-   .trim();
-   textBoxInput = $("<textarea>")
-   .addClass("form-control col-7")
-   .val(text);
-   $(this).replaceWith(textBoxInput);
-    textBoxInput.trigger("focus");
-    $(".activity-container").css("pointer-events", "none")
-    $(".saveBtn").css("pointer-events", "auto")
-
-});*/
-
-/*$(".time-container").on("click", ".activity-container", function() {
-    console.log("clicked");
-    textBoxInput = $("<textarea>").addClass("form-control col-7");
-    $(this).append(textBoxInput);
-    textBoxInput.trigger("focus");
-    $(".activity-container").css("pointer-events", "none")
-    $(".saveBtn").css("pointer-events", "auto")
-});*/
 
 function openTextBox(clickedEl) {
 
@@ -57,34 +31,19 @@ function openTextBoxEdit(clickedEl) {
    .val(text);
    $(clickedEl).replaceWith(textBoxInput);
     textBoxInput.trigger("focus");
-    /*$(".activity-container").css("pointer-events", "none")
-    $(".saveBtn").css("pointer-events", "auto")*/
-
 }
 
 function saveTask(clickedEl) {
     var taskText = $("textarea").val().trim();
     var taskContainer = $(clickedEl).prev()
-    createTask(taskText, taskContainer, elementEdit, textBoxInput)
+    var clickedElClass = $(clickedEl)[0].classList[0];
+    createTask(taskText, taskContainer, elementEdit, textBoxInput, clickedElClass)
     $("textarea").remove()
     $(".saveBtn").css("pointer-events", "none")
     elementEdit = ''
     textBoxInput = ''
     localStorage.setItem("tasks", JSON.stringify(taskStorage))
-    debugger;
 }
-
-/*$(".time-container").on("click",".saveBtn", function() {
-    var taskText = $("textarea").val().trim();
-    var taskContainer = $(this)
-    taskContainer = taskContainer.prev()
-    createTask(taskText, taskContainer, elementEdit, textBoxInput)
-    $("textarea").remove()
-    $(".activity-container").css("pointer-events", "auto")
-    $(".saveBtn").css("pointer-events", "none")
-    elementEdit = ''
-    textBoxInput = ''
-});*/
 
 $(document).on("click",function(event){
     var activityContainerClass = $(".activity-container")[0].classList[0]
@@ -94,11 +53,11 @@ $(document).on("click",function(event){
     console.log(event.target)
     console.log(textAreaClass)
     var clickedEl = event.target;
-    clickedElClass = $(clickedEl)[0].classList[0];
+    var clickedElClass = $(clickedEl)[0].classList[0];
     if(clickedElClass === activityContainerClass && textAreaClass === undefined) {
         openTextBox(clickedEl)
         $(".saveBtn").css("pointer-events", "auto")
-    } else if(clickedElClass === activityClass) {
+    } else if(clickedElClass === activityClass && textAreaClass === undefined) {
         openTextBoxEdit(clickedEl);
         $(".saveBtn").css("pointer-events", "auto")
     } else if(clickedElClass === saveBtnClass) {
@@ -107,24 +66,22 @@ $(document).on("click",function(event){
         if(elementEdit === '') {
             $("textarea").remove()
         } else {
-            var taskText = $(textBoxInput).val().trim()
+            var index = $(elementEdit).attr("id");
+            var taskobj = taskStorage[index]
+            var taskText = taskobj.text
+            debugger;
             $(elementEdit).text(taskText);
             $(textBoxInput).replaceWith(elementEdit);
             elementEdit = ''
             textBoxInput = ''
-
         }
-
     }
-    /*textBoxInput.replaceWith(elementEdit);
-        $(".activity-container").css("pointer-events", "auto")
-        $(".saveBtn").css("pointer-events", "none")*/
 })
 
-function createTask(taskText, taskContainer, elementEdit, textBoxInput) {
+function createTask(taskText, taskContainer, elementEdit, textBoxInput, clickedElClass) {
+    var taskNumber = $(".activity").length
     var taskDiv = $("<div>").addClass("activity").attr("id", taskNumber);
     var taskId = $(taskContainer).attr("id")
-    var taskNumber = $(".activity").length
     if (elementEdit === '') {
     taskDiv.text(taskText);
     taskContainer.append(taskDiv)
@@ -133,11 +90,12 @@ function createTask(taskText, taskContainer, elementEdit, textBoxInput) {
         id: taskId
     });
     } else {
-        var index = $(element).first().attr("id")
+        var index = $(elementEdit).attr("id");
+        var taskobj = taskStorage.splice(index, 1);
+        taskobj.text = taskText;
+        taskStorage.splice(index, 1, taskobj)
         $(elementEdit).text(taskText);
         $(textBoxInput).replaceWith(elementEdit);
-
-        taskStorage[index].text = text;
     }
 }
 
@@ -157,10 +115,9 @@ function auditTask(task) {
 function loadStoredTasks() {
     var recalledTasks = JSON.parse(localStorage.getItem("tasks"));
     recalledTasks.forEach((obj, index) => {
-        debugger;
         var taskText = obj.text
         var containerClassId = ".activity-container" + "#" + obj.id
-        var taskContainer = $(".activity-container#1")
+        var taskContainer = $(containerClassId)
         createTask(taskText, taskContainer, elementEdit, textBoxInput)
     })
 }
@@ -169,8 +126,6 @@ function load() {
     $(".saveBtn").css("pointer-events", "none")
     checkTime();
     loadStoredTasks()
-    
-    //$(.activity-container#1)
 }
 load()
 
