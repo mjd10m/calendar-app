@@ -35,6 +35,17 @@ function saveTask(clickedEl) {
     var taskContainer = $(clickedEl).prev();
     var clickedElClass = $(clickedEl)[0].classList[0];
     createTask(taskText, taskContainer, elementEdit, textBoxInput, clickedElClass);
+    var newArr = []
+    $(".activity").each(function() {
+        var textUpdate = $(this).text();
+        var idUpdate = $(this).parent().attr("id");
+        debugger;
+        newArr.push({
+            text: textUpdate,
+            id: idUpdate
+        })
+        taskStorage = newArr
+    })
     $("textarea").remove();
     $(".saveBtn").css("pointer-events", "none");
     elementEdit = '';
@@ -86,11 +97,6 @@ function createTask(taskText, taskContainer, elementEdit, textBoxInput, clickedE
         id: taskId
     });
     } else {
-        var index = $(elementEdit).attr("id");
-        var taskobj = taskStorage.splice(index, 1);
-        taskobj.text = taskText;
-        debugger;
-        taskStorage.splice(index, 1, taskobj);
         $(elementEdit).text(taskText);
         $(textBoxInput).replaceWith(elementEdit);
     }
