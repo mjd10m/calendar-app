@@ -159,8 +159,8 @@ function loadStoredTasks() {
     recalledTasks.forEach((obj, index) => {
         debugger;
         var taskText = obj.text
-        var containerClassId = ".activity" + "#" + obj.id
-        var taskContainer = $(containerClassId)
+        var containerClassId = ".activity-container" + "#" + obj.id
+        var taskContainer = $(".activity-container#1")
         createTask(taskText, taskContainer, elementEdit, textBoxInput)
     })
 }
