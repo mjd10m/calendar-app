@@ -39,7 +39,6 @@ function saveTask(clickedEl) {
     $(".activity").each(function() {
         var textUpdate = $(this).text();
         var idUpdate = $(this).parent().attr("id");
-        debugger;
         newArr.push({
             text: textUpdate,
             id: idUpdate
