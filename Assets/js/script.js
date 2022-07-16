@@ -86,7 +86,6 @@ $(document).on("click",function(event){
         if(elementEdit === '') {
             $("textarea").remove();
         } else {
-            debugger;
             var index = $(elementEdit).attr("id");
             var taskobj = taskStorage[index];
             var taskText = taskobj.text;
