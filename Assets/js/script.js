@@ -37,12 +37,25 @@ function saveTask(clickedEl) {
     createTask(taskText, taskContainer, elementEdit, textBoxInput, clickedElClass);
     var newArr = []
     $(".activity").each(function() {
+        if(newArr.length === 0) {
+        var newActivityId = newArr.length
         var textUpdate = $(this).text();
         var idUpdate = $(this).parent().attr("id");
+        $(this).attr("id", newActivityId)
         newArr.push({
             text: textUpdate,
             id: idUpdate
         })
+        } else {
+            var newActivityId = newArr.length + 1
+            var textUpdate = $(this).text();
+            var idUpdate = $(this).parent().attr("id");
+            $(this).attr("id", newActivityId)
+            newArr.push({
+                text: textUpdate,
+                id: idUpdate
+        })
+        }
         taskStorage = newArr
     })
     $("textarea").remove();
@@ -73,6 +86,7 @@ $(document).on("click",function(event){
         if(elementEdit === '') {
             $("textarea").remove();
         } else {
+            debugger;
             var index = $(elementEdit).attr("id");
             var taskobj = taskStorage[index];
             var taskText = taskobj.text;
