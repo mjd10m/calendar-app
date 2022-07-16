@@ -47,7 +47,7 @@ function saveTask(clickedEl) {
             id: idUpdate
         })
         } else {
-            var newActivityId = newArr.length + 1
+            var newActivityId = newArr.length
             var textUpdate = $(this).text();
             var idUpdate = $(this).parent().attr("id");
             $(this).attr("id", newActivityId)
